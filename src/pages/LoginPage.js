@@ -1,33 +1,41 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import swal from 'sweetalert2'
+import { AuthContext } from "../auth/AuthContext"
 
 const LoginPage = () => {
   const [form, setForm] = useState({
-    email: '',
-    password: '',
-    remember: true
+    email: '', password: '', remember: true
   })
+  const { login } = useContext(AuthContext)
 
   const handleChange = ({target: {name, value}}) => setForm({ ...form, [name] : value})
 
   const toggleCheck = () => setForm({...form, remember: !form.remember})
 
-  const handleSubmit = (e) => {
+  const checkForm = () => {
+    return !(form.email.length > 0 && form.password.length >= 8)
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
     
     form.remember 
       ? localStorage.setItem('email', form.email)
       : localStorage.removeItem('email')
 
-    //TODO: call to backend
-    
+    const {email, password} = form
+    const ok = await login(email, password)
+    if(!ok){
+      swal.fire('Error', 'Check the user and the email', 'error')
+    }
   }
 
   //set remembered email
   useEffect(() => {
     const email = localStorage.getItem('email')
     if(email){
-      setForm({...form, email, remember:true})
+      setForm((form) => ({...form, email, remember:true}))
     }
   }, [])
 
@@ -60,7 +68,7 @@ const LoginPage = () => {
       </div>
 
       <div className='container-login100-form-btn m-t-17'>
-        <button type="submit" className='login100-form-btn'>Login</button>
+        <button disabled={checkForm()} type="submit" className='login100-form-btn'>Login</button>
       </div>
     </form>
   )
