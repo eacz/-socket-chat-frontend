@@ -2,12 +2,13 @@ import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import swal from 'sweetalert2'
 import { AuthContext } from "../auth/AuthContext"
+import formatError from "../helpers/formatError"
 
 const LoginPage = () => {
   const [form, setForm] = useState({
     email: '', password: '', remember: true
   })
-  const { login } = useContext(AuthContext)
+  const { login, auth: { errors } } = useContext(AuthContext)
 
   const handleChange = ({target: {name, value}}) => setForm({ ...form, [name] : value})
 
@@ -27,7 +28,8 @@ const LoginPage = () => {
     const {email, password} = form
     const ok = await login(email, password)
     if(!ok){
-      swal.fire('Error', 'Check the user and the email', 'error')
+      const errorsFormatted = formatError(errors)
+      swal.fire('Error', errorsFormatted, 'error')
     }
   }
 

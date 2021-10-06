@@ -1,5 +1,7 @@
-import { createContext, useCallback, useState } from 'react'
+import { createContext, useCallback, useReducer } from 'react'
 import { fetchWithoutToken } from '../helpers/fetch'
+import { CLEAN_ERRORS, LOGIN_FAILED, LOGIN_START, LOGIN_SUCCESS } from '../types/authTypes'
+import AuthReducer from './AuthReducer'
 
 export const AuthContext = createContext()
 
@@ -10,26 +12,23 @@ const initialState = {
   name: null,
   username: null,
   email: null,
+  errors: null,
+  loading: false,
 }
 
 const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState(initialState)
+  const [auth, dispatch] = useReducer(AuthReducer, initialState,)
 
   const login = async (email, password) => {
+    dispatch({type: LOGIN_START })
     const res = await fetchWithoutToken('login', { email, password }, 'POST')
     if (res.ok) {
-      const {
-        user: { id, email, name, username } } = res
+      const { user } = res
       localStorage.setItem('token-sk', res.token)
-      setAuth((auth) => ({
-        ...auth,
-        id, email, name, username,
-        logged: true, checking: false,
-      }))
-      console.log('auth');
+      dispatch({type: LOGIN_SUCCESS, payload: { user }})
+    } else {
+      dispatch({type: LOGIN_FAILED, payload: { errors: res.msg || res.errors }})      
     }
-
-
     return res.ok;
   }
 
@@ -39,6 +38,10 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {}
 
+  const cleanErrors = () => {
+    dispatch({type: CLEAN_ERRORS})
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -47,6 +50,7 @@ const AuthProvider = ({ children }) => {
         register,
         verifyToken,
         logout,
+        cleanErrors,
       }}
     >
       {children}
