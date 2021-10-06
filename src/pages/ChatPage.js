@@ -1,7 +1,19 @@
+import ChatSelect from '../components/ChatSelect'
+import InboxPeople from '../components/InboxPeople'
+import Messages from '../components/Messages'
+import '../css/chat.css'
+
 const ChatPage = () => {
   return (
-    <div>
-      <p>chat page</p> 
+    <div className='messaging'>
+      <div className='inbox_msg'>
+        <InboxPeople />
+        
+        {
+          //temporary
+          false ?<Messages /> :<ChatSelect />
+        }
+      </div>
     </div>
   )
 }
