@@ -6,6 +6,7 @@ import {
   LOGIN_FAILED,
   LOGIN_START,
   LOGIN_SUCCESS,
+  LOGOUT,
   REGISTER_FAILED,
   REGISTER_START,
   REGISTER_SUCCESS,
@@ -73,7 +74,10 @@ const AuthProvider = ({ children }) => {
     }
   }, [])
 
-  const logout = () => {}
+  const logout = () => {
+    removeToken()
+    dispatch({type: LOGOUT})
+  }
 
   const cleanErrors = () => {
     dispatch({ type: CLEAN_ERRORS })

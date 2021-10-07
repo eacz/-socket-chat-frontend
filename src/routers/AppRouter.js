@@ -1,11 +1,13 @@
 import { useContext, useEffect } from 'react'
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom'
 import ChatPage from '../pages/ChatPage'
 import AuthRouter from './AuthRouter'
 import { AuthContext } from '../auth/AuthContext';
 import LoadingPage from '../pages/LoadingPage';
+import PublicRoute from './PublicRoute';
+import PrivateRoute from './PrivateRoute';
 const AppRouter = () => {
-  const { verifyToken, auth: { checking } } = useContext(AuthContext)
+  const { verifyToken, auth: { checking, logged } } = useContext(AuthContext)
  
 
   useEffect(() => {
@@ -19,8 +21,9 @@ const AppRouter = () => {
     <Router>
       <div>
         <Switch>
-          <Route path="/auth" component={AuthRouter} />
-          <Route exact path="/" component={ChatPage} />
+          {/*<Route path="/auth" component={AuthRouter} />*/}
+          <PublicRoute isAuth={logged} path="/auth" component={AuthRouter} />
+          <PrivateRoute isAuth={logged} exact path="/" component={ChatPage} />
           <Redirect to="/" />
         </Switch>
       </div>

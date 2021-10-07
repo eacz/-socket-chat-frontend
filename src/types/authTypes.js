@@ -10,3 +10,5 @@ export const REGISTER_FAILED = 'REGISTER_FAILED'
 
 export const RENEW_SUCCESS = 'RENEW_SUCCESS'
 export const RENEW_FAILED = 'RENEW_FAILED'
+
+export const LOGOUT = 'LOGOUT'
