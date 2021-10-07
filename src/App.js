@@ -1,13 +1,15 @@
-import AuthProvider from "./auth/AuthContext";
-import AppRouter from "./routers/AppRouter";
-
+import AuthProvider from './auth/AuthContext'
+import SocketProvider from './context/SocketContext'
+import AppRouter from './routers/AppRouter'
 
 function App() {
   return (
     <AuthProvider>
-      <AppRouter />
+      <SocketProvider>
+        <AppRouter />
+      </SocketProvider>
     </AuthProvider>
-  );
+  )
 }
 
-export default App;
+export default App

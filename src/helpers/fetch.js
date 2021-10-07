@@ -1,6 +1,6 @@
 import { getToken } from "./token-storage"
 
-const baseURL = process.env.REACT_APP_BACKEND_URL
+const baseURL = process.env.REACT_APP_BACKEND_URL_API
 
 export const fetchWithoutToken = async (endpoint, data, method = 'GET') => {
   const url = `${baseURL}/${endpoint}`
