@@ -2,21 +2,21 @@ import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import swal from 'sweetalert2'
 import { AuthContext } from "../auth/AuthContext"
+import Spinner from "../components/Spinner"
 import formatError from "../helpers/formatError"
 
 const LoginPage = () => {
   const [form, setForm] = useState({
     email: '', password: '', remember: true
   })
-  const { login, auth: { errors } } = useContext(AuthContext)
+  const { login, auth: { errors, loading } } = useContext(AuthContext)
 
   const handleChange = ({target: {name, value}}) => setForm({ ...form, [name] : value})
 
   const toggleCheck = () => setForm({...form, remember: !form.remember})
 
-  const checkForm = () => {
-    return !(form.email.length > 0 && form.password.length >= 8)
-  }
+  const checkForm = () => !(form.email.length > 0 && form.password.length >= 8)
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -70,7 +70,10 @@ const LoginPage = () => {
       </div>
 
       <div className='container-login100-form-btn m-t-17'>
-        <button disabled={checkForm()} type="submit" className='login100-form-btn'>Login</button>
+        {loading 
+          ? <Spinner />
+          : <button disabled={checkForm()} type="submit" className='login100-form-btn'>Login</button>
+        }
       </div>
     </form>
   )
