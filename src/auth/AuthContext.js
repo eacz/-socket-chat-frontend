@@ -1,5 +1,6 @@
 import { createContext, useCallback, useReducer } from 'react'
-import { fetchWithoutToken } from '../helpers/fetch'
+import { fetchWithoutToken, fetchWithToken } from '../helpers/fetch'
+import { getToken, removeToken, setToken } from '../helpers/token-storage'
 import {
   CLEAN_ERRORS,
   LOGIN_FAILED,
@@ -8,6 +9,8 @@ import {
   REGISTER_FAILED,
   REGISTER_START,
   REGISTER_SUCCESS,
+  RENEW_FAILED,
+  RENEW_SUCCESS,
 } from '../types/authTypes'
 import AuthReducer from './AuthReducer'
 
@@ -32,7 +35,7 @@ const AuthProvider = ({ children }) => {
     const res = await fetchWithoutToken('login', { email, password }, 'POST')
     if (res.ok) {
       const { user, token } = res
-      localStorage.setItem('token-sk', token)
+      setToken(token)
       dispatch({ type: LOGIN_SUCCESS, payload: { user } })
     } else {
       dispatch({ type: LOGIN_FAILED, payload: { errors: res.msg || res.errors } })
@@ -45,7 +48,7 @@ const AuthProvider = ({ children }) => {
     const res = await fetchWithoutToken('login/new', { name, username, email, password }, 'POST')
     if (res.ok) {
       const { user, token } = res
-      localStorage.setItem('token-sk', token)
+      setToken(token)
       dispatch({ type: REGISTER_SUCCESS, payload: { user } })
     } else {
       dispatch({ type: REGISTER_FAILED, payload: { errors: res.msg || res.errors } })
@@ -53,7 +56,22 @@ const AuthProvider = ({ children }) => {
     return res.ok
   }
 
-  const verifyToken = useCallback(() => {}, [])
+  const verifyToken = useCallback(async () => {
+    const token = getToken()
+    if(!token){
+      return dispatch({ type: RENEW_FAILED })
+    }
+    
+    const res = await fetchWithToken('login/renew')
+    if(res.ok){
+      const {user, token} = res
+      setToken(token);
+      dispatch({ type: RENEW_SUCCESS, payload: { user } })
+    } else {
+      dispatch({ type: RENEW_FAILED })
+      removeToken()
+    }
+  }, [])
 
   const logout = () => {}
 

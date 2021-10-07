@@ -1,3 +1,16 @@
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.loading-container h1 {
+  margin-bottom: 1rem;
+}
+
+
 .sk-fading-circle {
   margin: 10px auto;
   width: 40px;
