@@ -6,7 +6,6 @@ const useSocket = (serverPath) => {
   //const socket = useMemo(() => io(serverPath, { transports: [ 'websocket'] }), [serverPath])
   const [socket, setSocket] = useState(null)
   const [online, setOnline] = useState(false)
-  const token = getToken()
 
   const connectSocket = useCallback(() => {
     const socketTemp = io(serverPath, { 
@@ -14,7 +13,7 @@ const useSocket = (serverPath) => {
       autoConnect: true,
       forceNew: true,
       query: {
-        'token-sk':token
+        'token-sk': getToken()
       }
     })
     setSocket(socketTemp)
