@@ -2,6 +2,7 @@ import {  createContext, useContext, useEffect } from "react";
 import { AuthContext } from "../auth/AuthContext";
 import { ChatContext } from "./chat/ChatContext";
 import useSocket from "../hooks/useSocket";
+import { scrollToBottomAnimated } from "../helpers/scroll";
 
 export const SocketContext = createContext()
 
@@ -33,7 +34,7 @@ const SocketProvider = ({children}) => {
   useEffect(() => {
     socket?.on('personal-message', message => {
       newMessage(message)
-      //TODO: scroll messages screen to bottom
+      scrollToBottomAnimated('messages')
     })
   }, [socket, newMessage])
 

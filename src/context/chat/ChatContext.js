@@ -1,5 +1,6 @@
 import { createContext, useCallback, useReducer } from 'react'
 import { fetchWithToken } from '../../helpers/fetch'
+import { scrollToBottom } from '../../helpers/scroll'
 import { NEW_MESSAGE, SET_ACTIVE_CHAT, SET_MESSAGES, SET_USERS } from '../../types/chatTypes'
 import chatReducer from './ChatReducer'
 
@@ -24,6 +25,7 @@ const ChatProvider = ({ children }) => {
   const getMessagesHistory = async (from) => {
     const res = await fetchWithToken(`messages/${from}`)
     dispatch({type: SET_MESSAGES, payload: res.messages})
+    scrollToBottom('messages')
   }
 
   return (
