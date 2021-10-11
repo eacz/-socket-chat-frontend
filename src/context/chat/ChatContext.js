@@ -1,5 +1,5 @@
 import { createContext, useCallback, useReducer } from 'react'
-import { SET_ACTIVE_CHAT, SET_USERS } from '../../types/chatTypes'
+import { NEW_MESSAGE, SET_ACTIVE_CHAT, SET_USERS } from '../../types/chatTypes'
 import chatReducer from './ChatReducer'
 
 export const ChatContext = createContext()
@@ -18,13 +18,16 @@ const ChatProvider = ({ children }) => {
 
   const setActiveChat = (userId) => dispatch({ type: SET_ACTIVE_CHAT, payload: userId })
 
+  const newMessage = useCallback((message) => { dispatch({type: NEW_MESSAGE, payload: message }) }, [])
+
   return (
     <ChatContext.Provider
       value={{
         chat,
         dispatch,
         setUsers,
-        setActiveChat
+        setActiveChat,
+        newMessage
       }}
     >
       {children}

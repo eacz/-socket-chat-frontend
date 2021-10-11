@@ -9,7 +9,7 @@ const SocketProvider = ({children}) => {
 
   const { online, socket, connectSocket, disconnectSocket } = useSocket(process.env.REACT_APP_BACKEND_URL)
   const {auth} = useContext(AuthContext)
-  const { setUsers } = useContext(ChatContext)
+  const { setUsers, newMessage } = useContext(ChatContext)
 
   useEffect(() => {
     if(auth.logged){
@@ -28,6 +28,14 @@ const SocketProvider = ({children}) => {
       setUsers(users)
     })
   }, [socket, setUsers])
+
+  //listen to new messages
+  useEffect(() => {
+    socket?.on('personal-message', message => {
+      newMessage(message)
+      //TODO: scroll messages screen to bottom
+    })
+  }, [socket, newMessage])
 
   return (
     <SocketContext.Provider
