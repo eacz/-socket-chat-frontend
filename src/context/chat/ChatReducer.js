@@ -1,4 +1,4 @@
-import { NEW_MESSAGE, SET_ACTIVE_CHAT, SET_USERS } from "../../types/chatTypes";
+import { NEW_MESSAGE, SET_ACTIVE_CHAT, SET_MESSAGES, SET_USERS } from "../../types/chatTypes";
 
 const chatReducer = (state, action) => {
   switch(action.type){
@@ -14,6 +14,8 @@ const chatReducer = (state, action) => {
       } else {
         return state
       }
+    case SET_MESSAGES:
+      return {...state, messages: action.payload}
     default:
       return state;
   }

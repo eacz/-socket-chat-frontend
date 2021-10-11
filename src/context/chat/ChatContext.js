@@ -1,5 +1,6 @@
 import { createContext, useCallback, useReducer } from 'react'
-import { NEW_MESSAGE, SET_ACTIVE_CHAT, SET_USERS } from '../../types/chatTypes'
+import { fetchWithToken } from '../../helpers/fetch'
+import { NEW_MESSAGE, SET_ACTIVE_CHAT, SET_MESSAGES, SET_USERS } from '../../types/chatTypes'
 import chatReducer from './ChatReducer'
 
 export const ChatContext = createContext()
@@ -20,6 +21,11 @@ const ChatProvider = ({ children }) => {
 
   const newMessage = useCallback((message) => { dispatch({type: NEW_MESSAGE, payload: message }) }, [])
 
+  const getMessagesHistory = async (from) => {
+    const res = await fetchWithToken(`messages/${from}`)
+    dispatch({type: SET_MESSAGES, payload: res.messages})
+  }
+
   return (
     <ChatContext.Provider
       value={{
@@ -27,7 +33,8 @@ const ChatProvider = ({ children }) => {
         dispatch,
         setUsers,
         setActiveChat,
-        newMessage
+        newMessage,
+        getMessagesHistory
       }}
     >
       {children}

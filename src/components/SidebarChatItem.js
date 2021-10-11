@@ -4,13 +4,17 @@ import { ChatContext } from '../context/chat/ChatContext'
 
 const SidebarChatItem = ({user}) => {
 
-  const { chat: { activeChat }, setActiveChat } = useContext(ChatContext)
+  const { chat: { activeChat }, setActiveChat, getMessagesHistory } = useContext(ChatContext)
   
+  const onChangeChat = () => {
+    setActiveChat(user.id)
+    getMessagesHistory(user.id)
+  }
   
   return (
   <div 
     className={`chat_list ${activeChat === user.id && 'active_chat'}`}
-    onClick={() => setActiveChat(user.id)}
+    onClick={onChangeChat}
   >
       <div className='chat_people'>
         <div className='chat_img'>
