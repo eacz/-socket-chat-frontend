@@ -1,4 +1,5 @@
-import { createContext, useCallback, useReducer } from 'react'
+import { createContext, useCallback, useContext, useReducer } from 'react'
+import { ChatContext } from '../context/chat/ChatContext'
 import { fetchWithoutToken, fetchWithToken } from '../helpers/fetch'
 import { getToken, removeToken, setToken } from '../helpers/token-storage'
 import {
@@ -30,6 +31,7 @@ const initialState = {
 
 const AuthProvider = ({ children }) => {
   const [auth, dispatch] = useReducer(AuthReducer, initialState)
+  const {logoutChat} = useContext(ChatContext)
 
   const login = async (email, password) => {
     dispatch({ type: LOGIN_START })
@@ -76,6 +78,7 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {
     removeToken()
+    logoutChat()
     dispatch({type: LOGOUT})
   }
 

@@ -1,7 +1,7 @@
 import { createContext, useCallback, useReducer } from 'react'
 import { fetchWithToken } from '../../helpers/fetch'
 import { scrollToBottom } from '../../helpers/scroll'
-import { NEW_MESSAGE, SET_ACTIVE_CHAT, SET_MESSAGES, SET_USERS } from '../../types/chatTypes'
+import { LOGOUT, NEW_MESSAGE, SET_ACTIVE_CHAT, SET_MESSAGES, SET_USERS } from '../../types/chatTypes'
 import chatReducer from './ChatReducer'
 
 export const ChatContext = createContext()
@@ -28,6 +28,10 @@ const ChatProvider = ({ children }) => {
     scrollToBottom('messages')
   }
 
+  const logoutChat = () => {
+    dispatch({type: LOGOUT})
+  }
+
   return (
     <ChatContext.Provider
       value={{
@@ -36,7 +40,8 @@ const ChatProvider = ({ children }) => {
         setUsers,
         setActiveChat,
         newMessage,
-        getMessagesHistory
+        getMessagesHistory,
+        logoutChat
       }}
     >
       {children}
